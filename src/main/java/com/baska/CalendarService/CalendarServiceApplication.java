@@ -1,18 +1,20 @@
 package com.baska.CalendarService;
 
-import com.baska.CalendarService.GRPC.CalendarServiceImpl;
+import com.baska.CalendarService.Grpc.CalendarServiceImpl;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+
 
 import java.io.IOException;
 
+
 @EnableAutoConfiguration
 @ComponentScan
-@EnableScheduling
+@EnableJpaRepositories("Repository")
 public class CalendarServiceApplication {
 
 	public static void main(String[] args) throws IOException, InterruptedException {

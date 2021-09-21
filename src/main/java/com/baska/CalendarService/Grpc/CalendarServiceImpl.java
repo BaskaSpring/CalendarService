@@ -1,17 +1,17 @@
-package com.baska.CalendarService.GRPC;
+package com.baska.CalendarService.Grpc;
 
 import com.google.gson.Gson;
 import com.id.grpc.CalendarServiceGrpc;
 import com.id.grpc.CalendarServiceProto;
 import io.grpc.stub.StreamObserver;
 import com.baska.CalendarService.Payloads.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import com.baska.CalendarService.Services.*;
+import org.springframework.stereotype.Service;
 
+
+@Service
 public class CalendarServiceImpl extends CalendarServiceGrpc.CalendarServiceImplBase {
 
-    @Autowired
-    AccessService accessService;
+
 
     @Override
     public void getEvents(CalendarServiceProto.GetEventsRequest request, StreamObserver<CalendarServiceProto.GetEventsResponse> responseObserver) {
