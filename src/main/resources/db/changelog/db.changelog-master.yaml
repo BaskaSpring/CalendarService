@@ -1,0 +1,260 @@
+databaseChangeLog:
+  - logicalFilePath: db/changelog/db.changelog-master.yaml
+  - changeSet:
+      id: 1
+      author: baska
+      changes:
+        - createTable:
+            tableName: events
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+  - changeSet:
+      id: 2
+      author: baska
+      changes:
+        - createTable:
+            tableName: eventsData
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: id_event
+                  type: BIGINT
+              - column:
+                  name: time_stamp
+                  type: TIMESTAMP
+              - column:
+                  name: title
+                  type: varchar(250)
+              - column:
+                  name: text
+                  type: longtext
+              - column:
+                  name: date_begin
+                  type: TIMESTAMP
+              - column:
+                  name: date_end
+                  type: TIMESTAMP
+              - column:
+                  name: complete_percent
+                  type: INT
+              - column:
+                  name: parent_complete_percent
+                  type: INT
+              - column:
+                  name: resource
+                  type: varchar(250)
+              - column:
+                  name: user_id
+                  type: BIGINT
+              - column:
+                  name: status_id
+                  type: BIGINT
+              - column:
+                  name: m_tree
+                  type: varchar(250)
+
+  - changeSet:
+      id: 3
+      author: baska
+      changes:
+        - createTable:
+            tableName: eventsDataStory
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: id_event
+                  type: BIGINT
+              - column:
+                  name: timestamp
+                  type: TIMESTAMP
+              - column:
+                  name: title
+                  type: varchar(250)
+              - column:
+                  name: text
+                  type: longtext
+              - column:
+                  name: date_begin
+                  type: TIMESTAMP
+              - column:
+                  name: date_end
+                  type: TIMESTAMP
+              - column:
+                  name: complete_percent
+                  type: INT
+              - column:
+                  name: parent_complete_percent
+                  type: INT
+              - column:
+                  name: resource
+                  type: varchar(250)
+              - column:
+                  name: user_id
+                  type: BIGINT
+              - column:
+                  name: status_id
+                  type: BIGINT
+              - column:
+                  name: m_tree
+                  type: varchar(250)
+  - changeSet:
+      id: 4
+      author: baska
+      changes:
+        - createTable:
+            tableName: status
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(20)
+
+  - changeSet:
+      id: 5
+      author: baska
+      changes:
+        - createTable:
+            tableName: group
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(150)
+              - column:
+                  name: parend_id
+                  type: BIGINT
+
+  - changeSet:
+      id: 6
+      author: baska
+      changes:
+        - createTable:
+            tableName: groupuser
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+              - column:
+                  name: group_id
+                  type: BIGINT
+
+
+  - changeSet:
+      id: 7
+      author: baska
+      changes:
+        - createTable:
+            tableName: userpemission
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+              - column:
+                  name: event_id
+                  type: BIGINT
+
+  - changeSet:
+      id: 8
+      author: baska
+      changes:
+        - createTable:
+            tableName: grouppermission
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+              - column:
+                  name: group_id
+                  type: BIGINT
+
+  - changeSet:
+      id: 9
+      author: baska
+      changes:
+        - insert:
+            tableName: status
+            columns:
+              - column:
+                  name: id
+                  value: 1
+              - column:
+                  name: status
+                  value: "ACTIVE"
+  - changeSet:
+      id: 10
+      author: baska
+      changes:
+        - insert:
+            tableName: status
+            columns:
+              - column:
+                  name: id
+                  value: 2
+              - column:
+                  name: status
+                  value: "DELETED"
+  - changeSet:
+      id: 11
+      author: baska
+      changes:
+        - insert:
+            tableName: status
+            columns:
+              - column:
+                  name: id
+                  value: 3
+              - column:
+                  name: status
+                  value: "CLOSED"
