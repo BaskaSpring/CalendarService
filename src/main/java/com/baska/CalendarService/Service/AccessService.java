@@ -52,7 +52,7 @@ public class AccessService {
 
     public String getAll(GetEventsPayloadRequest getEventsPayloadRequest){
         List<Long> eventsDataList = eventsDataRepository.findByDate(getEventsPayloadRequest.getDateBegin(),getEventsPayloadRequest.getDateEnd());
-        List<Long> groupIdList =
+       // List<Long> groupIdList =
         return "";
     }
 

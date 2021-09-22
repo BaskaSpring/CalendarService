@@ -14,10 +14,13 @@ public class UserPermission {
 
     private Long userId;
 
-    public UserPermission(Long id, Long eventId, Long userId) {
+    private Long roleId;
+
+    public UserPermission(Long id, Long eventId, Long userId, Long roleId) {
         this.id = id;
         this.eventId = eventId;
         this.userId = userId;
+        this.roleId = roleId;
     }
 
     public UserPermission() {
@@ -45,5 +48,13 @@ public class UserPermission {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public Long getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
     }
 }

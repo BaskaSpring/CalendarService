@@ -15,10 +15,13 @@ public class GroupPermission {
 
     private Long groupId;
 
-    public GroupPermission(Long id, Long eventsId, Long groupId) {
+    private Long roleId;
+
+    public GroupPermission(Long id, Long eventsId, Long groupId, Long roleId) {
         this.id = id;
         this.eventsId = eventsId;
         this.groupId = groupId;
+        this.roleId = roleId;
     }
 
     public GroupPermission() {
@@ -46,5 +49,13 @@ public class GroupPermission {
 
     public void setGroupId(Long groupId) {
         this.groupId = groupId;
+    }
+
+    public Long getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
     }
 }

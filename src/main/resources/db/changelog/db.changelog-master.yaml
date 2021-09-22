@@ -197,6 +197,9 @@ databaseChangeLog:
               - column:
                   name: event_id
                   type: BIGINT
+              - column:
+                  name: role_id
+                  type: BIGINT
 
   - changeSet:
       id: 8
@@ -217,6 +220,9 @@ databaseChangeLog:
                   type: BIGINT
               - column:
                   name: group_id
+                  type: BIGINT
+              - column:
+                  name: role_id
                   type: BIGINT
 
   - changeSet:
@@ -258,3 +264,49 @@ databaseChangeLog:
               - column:
                   name: status
                   value: "CLOSED"
+
+  - changeSet:
+      id: 12
+      author: baska
+      changes:
+        - createTable:
+            tableName: role
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: role
+                  type: varchar(20)
+
+  - changeSet:
+      id: 13
+      author: baska
+      changes:
+        - insert:
+            tableName: role
+            columns:
+              - column:
+                  name: id
+                  value: 1
+              - column:
+                  name: role
+                  value: "WRITE"
+
+  - changeSet:
+      id: 14
+      author: baska
+      changes:
+        - insert:
+            tableName: role
+            columns:
+              - column:
+                  name: id
+                  value: 2
+              - column:
+                  name: role
+                  value: "READ"
