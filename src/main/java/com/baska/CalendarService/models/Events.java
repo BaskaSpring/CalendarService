@@ -11,8 +11,6 @@ public class Events {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
-
     public Long getId() {
         return id;
     }
