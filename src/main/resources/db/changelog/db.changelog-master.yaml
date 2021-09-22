@@ -310,3 +310,24 @@ databaseChangeLog:
               - column:
                   name: role
                   value: "READ"
+
+  - changeSet:
+      id: 15
+      author: baska
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+              - column:
+                  name: name
+                  type: varchar(20)

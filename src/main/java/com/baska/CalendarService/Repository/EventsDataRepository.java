@@ -24,4 +24,6 @@ public interface EventsDataRepository extends JpaRepository<Long, EventsData> {
     @Query("select distinct x from EventsData as x where x.idEvent in (:eventsId)")
     List<EventsData> getByEventsId(List<Long> eventsId);
 
+    @Query("select x from EventsData as x where x.idEvent=:eventId")
+    EventsData getEventById(Long eventId);
 }

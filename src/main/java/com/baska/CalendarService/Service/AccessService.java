@@ -1,17 +1,15 @@
 package com.baska.CalendarService.Service;
 
 
-import com.baska.CalendarService.Payloads.GetEventsPayloadRequest;
-import com.baska.CalendarService.Payloads.GetEventsPayloadResponse;
-import com.baska.CalendarService.Repository.EventsDataRepository;
-import com.baska.CalendarService.Repository.GroupAndUserRepository;
-import com.baska.CalendarService.Repository.GroupPermissionRepository;
-import com.baska.CalendarService.Repository.UserPermissionRepository;
+import com.baska.CalendarService.Payloads.*;
+import com.baska.CalendarService.Repository.*;
 import com.baska.CalendarService.models.*;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.*;
 
 @Service
@@ -29,7 +27,52 @@ public class AccessService {
     @Autowired
     EventsDataRepository eventsDataRepository;
 
-    public Boolean CheckAccess(Long eventId ,Long userId){
+    @Autowired
+    StatusRepository statusRepository;
+
+    @Autowired
+    RoleRepository roleRepository;
+
+    @Autowired
+    UsersRepository usersRepository;
+
+    public String getEvent(Long eventId,Long userId){
+        if (CheckAccess(eventId,userId)){
+            EventsData eventsData = eventsDataRepository.getEventById(eventId);
+            List<UserPermission> userPermissionList = userPermissionRepository.getPermissionByEventId(eventId);
+            List<GetEventUserList> eventUserLists = new ArrayList<>();
+            userPermissionList.forEach(x->eventUserLists.add(new GetEventUserList(x.getUserId(),roleRepository.getRoleByRoleId(x.getRoleId()).toString(),usersRepository.getUserNameByUserId(x.getUserId()))));
+            List<GroupPermission> groupPermissionList = groupPermissionRepository.getPermissionByEventId(eventId);
+
+
+
+
+            GetEventPayloadResponse getEventPayloadResponse = new GetEventPayloadResponse();
+            getEventPayloadResponse.setCompletePercent(eventsData.getCompletePercent());
+            getEventPayloadResponse.setIdEvent(eventsData.getIdEvent());
+            getEventPayloadResponse.setStatusId(statusRepository.getStatusById(eventsData.getStatusId()));
+            getEventPayloadResponse.setText(eventsData.getText());
+            getEventPayloadResponse.setTitle(eventsData.getTitle());
+            getEventPayloadResponse.setTimestamp(InstantToString(eventsData.getTimeStamp()));
+            getEventPayloadResponse.setDateBegin(InstantToString(eventsData.getDateBegin()));
+            getEventPayloadResponse.setDateEnd(InstantToString(eventsData.getDateEnd()));
+            getEventPayloadResponse.setParentCompletePercent(eventsData.getParentCompletePercent());
+            getEventPayloadResponse.setUserName(usersRepository.getUserNameByUserId(eventsData.getUserId()));
+            getEventPayloadResponse.setResource(eventsData.getResource());
+            getEventPayloadResponse.setUserPermission(eventUserLists);
+            getEventPayloadResponse.setGroupPermission();
+            new Gson().toJson(getEventPayloadResponse);
+        }
+        return "access denied";
+    }
+
+    private String InstantToString(Instant date){
+        Date MyDate = Date.from(date);
+        SimpleDateFormat formatter = new SimpleDateFormat("dd MM yyyy HH:mm:ss");
+        return formatter.format(MyDate);
+    }
+
+    private Boolean CheckAccess(Long eventId ,Long userId){
         UserPermission userPermission = userPermissionRepository.findByEventIdAndUserId(eventId,userId);
         if (userPermission.getId()!=null){
             return true;

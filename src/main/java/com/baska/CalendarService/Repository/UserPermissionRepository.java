@@ -16,4 +16,6 @@ public interface UserPermissionRepository  extends JpaRepository<Long, UserPermi
     @Query("select distinct x.eventId from UserPermission as x where x.userId=:userId and x.eventId in (:eventsId)")
     List<Long> getByUserAndEvents(Long userId, List<Long> evetnsId);
 
+    @Query("select x from UserPermission as x where x.eventId =:eventId")
+    List<UserPermission> getPermissionByEventId(Long eventId);
 }
