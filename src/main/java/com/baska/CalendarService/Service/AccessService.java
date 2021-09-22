@@ -2,18 +2,17 @@ package com.baska.CalendarService.Service;
 
 
 import com.baska.CalendarService.Payloads.GetEventsPayloadRequest;
+import com.baska.CalendarService.Payloads.GetEventsPayloadResponse;
 import com.baska.CalendarService.Repository.EventsDataRepository;
 import com.baska.CalendarService.Repository.GroupAndUserRepository;
 import com.baska.CalendarService.Repository.GroupPermissionRepository;
 import com.baska.CalendarService.Repository.UserPermissionRepository;
 import com.baska.CalendarService.models.*;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class AccessService {
@@ -52,8 +51,15 @@ public class AccessService {
 
     public String getAll(GetEventsPayloadRequest getEventsPayloadRequest){
         List<Long> eventsDataList = eventsDataRepository.findByDate(getEventsPayloadRequest.getDateBegin(),getEventsPayloadRequest.getDateEnd());
-       // List<Long> groupIdList =
-        return "";
+        List<Long> userEventsId = userPermissionRepository.getByUserAndEvents(getEventsPayloadRequest.getUserId(),eventsDataList);
+        Long groupId = groupAndUserRepository.findGroupByUserId(getEventsPayloadRequest.getUserId());
+        List<Long> groupEventsId = groupPermissionRepository.getByGroupAndEvents(groupId,eventsDataList);
+        userEventsId.addAll(groupEventsId);
+        return new Gson().toJson(new GetEventsPayloadResponse(eventsDataRepository.getByEventsId(userEventsId)));
+    }
+
+    public void CalculateAccess(){
+
     }
 
 

@@ -20,12 +20,25 @@ public class CalendarServiceImpl extends CalendarServiceGrpc.CalendarServiceImpl
     @Override
     public void getEvents(CalendarServiceProto.GetEventsRequest request, StreamObserver<CalendarServiceProto.GetEventsResponse> responseObserver) {
         GetEventsPayloadRequest getEventsPayloadRequest = new Gson().fromJson(request.getJson(), GetEventsPayloadRequest.class);
-        String s  = accessService.getAll(getEventsPayloadRequest);
+        String json  = accessService.getAll(getEventsPayloadRequest);
+        CalendarServiceProto.GetEventsResponse response = CalendarServiceProto.GetEventsResponse
+                .newBuilder()
+                .setJson(json)
+                .build();
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
     }
 
     @Override
     public void getEvent(CalendarServiceProto.GetEventRequest request, StreamObserver<CalendarServiceProto.GetEventResponse> responseObserver) {
-
+         getEventsPayloadRequest = new Gson().fromJson(request.getJson(), GetEventsPayloadRequest.class);
+        String json  = accessService.getAll(getEventsPayloadRequest);
+        CalendarServiceProto.GetEventsResponse response = CalendarServiceProto.GetEventsResponse
+                .newBuilder()
+                .setJson(json)
+                .build();
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
     }
 
     @Override

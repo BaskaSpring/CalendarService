@@ -18,5 +18,6 @@ public interface GroupPermissionRepository extends JpaRepository<Long, GroupPerm
     @Query("select x.groupId from GroupPermission as x where x.eventsId in (:eventsIds)")
     List<Long> findByEventsIds(Set<Long> eventsIds);
 
-
+    @Query("select x.eventsId from GroupPermission as x where x.groupId=:groupId and x.eventsId in (:eventsId)")
+    List<Long> getByGroupAndEvents(Long groupId, List<Long> eventsId);
 }

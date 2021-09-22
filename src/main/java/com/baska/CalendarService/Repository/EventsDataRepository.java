@@ -21,5 +21,7 @@ public interface EventsDataRepository extends JpaRepository<Long, EventsData> {
     @Query("select distinct x.idEvent from EventsData  as x where ((x.dateBegin>=:dateBegin)and(x.dateBegin<=:dateEnd))or((x.dateEnd>=:dateBegin)and(x.dateEnd<=:dateEnd))")
     List<Long> findByDate(Instant dateBegin,Instant dateEnd);
 
+    @Query("select distinct x from EventsData as x where x.idEvent in (:eventsId)")
+    List<EventsData> getByEventsId(List<Long> eventsId);
 
 }
