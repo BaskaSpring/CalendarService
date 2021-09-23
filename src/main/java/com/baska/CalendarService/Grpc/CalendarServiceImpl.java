@@ -1,7 +1,6 @@
 package com.baska.CalendarService.Grpc;
 
 import com.baska.CalendarService.Service.AccessService;
-import com.baska.CalendarService.models.EventsData;
 import com.google.gson.Gson;
 import com.id.grpc.CalendarServiceGrpc;
 import com.id.grpc.CalendarServiceProto;

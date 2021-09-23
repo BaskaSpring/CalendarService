@@ -9,4 +9,7 @@ import org.springframework.stereotype.Repository;
 public interface GroupRepository extends JpaRepository<Long, Group> {
     @Query("select x.parentId from Group as x where x.id =:groupId")
     Long GetParentIdByGroupId(Long groupId);
+
+    @Query("select  x.name from Group as x where x.id=:groupId")
+    String GetGroupNameByGroupId(Long groupId);
 }

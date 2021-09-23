@@ -4,7 +4,6 @@ import com.baska.CalendarService.models.UserPermission;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 
 @Repository
@@ -18,4 +17,5 @@ public interface UserPermissionRepository  extends JpaRepository<Long, UserPermi
 
     @Query("select x from UserPermission as x where x.eventId =:eventId")
     List<UserPermission> getPermissionByEventId(Long eventId);
+
 }

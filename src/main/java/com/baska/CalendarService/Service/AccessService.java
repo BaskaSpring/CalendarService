@@ -36,6 +36,9 @@ public class AccessService {
     @Autowired
     UsersRepository usersRepository;
 
+    @Autowired
+    GroupRepository groupRepository;
+
     public String getEvent(Long eventId,Long userId){
         if (CheckAccess(eventId,userId)){
             EventsData eventsData = eventsDataRepository.getEventById(eventId);
@@ -43,10 +46,8 @@ public class AccessService {
             List<GetEventUserList> eventUserLists = new ArrayList<>();
             userPermissionList.forEach(x->eventUserLists.add(new GetEventUserList(x.getUserId(),roleRepository.getRoleByRoleId(x.getRoleId()).toString(),usersRepository.getUserNameByUserId(x.getUserId()))));
             List<GroupPermission> groupPermissionList = groupPermissionRepository.getPermissionByEventId(eventId);
-
-
-
-
+            List<GetEventGroupList> eventGroupLists = new ArrayList<>();
+            groupPermissionList.forEach(x->eventGroupLists.add(new GetEventGroupList(x.getGroupId(),groupRepository.GetGroupNameByGroupId(x.getGroupId()))));
             GetEventPayloadResponse getEventPayloadResponse = new GetEventPayloadResponse();
             getEventPayloadResponse.setCompletePercent(eventsData.getCompletePercent());
             getEventPayloadResponse.setIdEvent(eventsData.getIdEvent());
@@ -60,7 +61,7 @@ public class AccessService {
             getEventPayloadResponse.setUserName(usersRepository.getUserNameByUserId(eventsData.getUserId()));
             getEventPayloadResponse.setResource(eventsData.getResource());
             getEventPayloadResponse.setUserPermission(eventUserLists);
-            getEventPayloadResponse.setGroupPermission();
+            getEventPayloadResponse.setGroupPermission(eventGroupLists);
             new Gson().toJson(getEventPayloadResponse);
         }
         return "access denied";

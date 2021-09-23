@@ -14,7 +14,6 @@ import java.io.IOException;
 
 @EnableAutoConfiguration
 @ComponentScan
-@EnableJpaRepositories("Repository")
 public class CalendarServiceApplication {
 
 	public static void main(String[] args) throws IOException, InterruptedException {

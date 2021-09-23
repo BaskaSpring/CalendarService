@@ -28,11 +28,11 @@ public class GetEventPayloadResponse {
 
     private String statusId;
 
-    private List<Group> groupPermission;
+    private List<GetEventGroupList> groupPermission;
 
     private List<GetEventUserList> userPermission;
 
-    public GetEventPayloadResponse(Long idEvent, String timestamp, String title, String text, String dateBegin, String dateEnd, Integer completePercent, Integer parentCompletePercent, String resource, String userName, String statusId, List<Group> groupPermission, List<GetEventUserList> userPermission) {
+    public GetEventPayloadResponse(Long idEvent, String timestamp, String title, String text, String dateBegin, String dateEnd, Integer completePercent, Integer parentCompletePercent, String resource, String userName, String statusId, List<GetEventGroupList> groupPermission, List<GetEventUserList> userPermission) {
         this.idEvent = idEvent;
         this.timestamp = timestamp;
         this.title = title;
@@ -139,11 +139,11 @@ public class GetEventPayloadResponse {
         this.statusId = statusId;
     }
 
-    public List<Group> getGroupPermission() {
+    public List<GetEventGroupList> getGroupPermission() {
         return groupPermission;
     }
 
-    public void setGroupPermission(List<Group> groupPermission) {
+    public void setGroupPermission(List<GetEventGroupList> groupPermission) {
         this.groupPermission = groupPermission;
     }
 
