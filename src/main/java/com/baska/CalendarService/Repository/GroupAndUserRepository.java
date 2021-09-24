@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface GroupAndUserRepository extends JpaRepository<Long, GroupAndUser> {
+public interface GroupAndUserRepository extends JpaRepository<GroupAndUser, Long> {
     @Query("select x.groupId from GroupAndUser as x where x.userId=:userId")
     Long findGroupByUserId(Long userId);
 }

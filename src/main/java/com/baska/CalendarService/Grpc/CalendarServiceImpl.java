@@ -7,10 +7,10 @@ import com.id.grpc.CalendarServiceProto;
 import io.grpc.stub.StreamObserver;
 import com.baska.CalendarService.Payloads.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 
-@Service
+@Component
 public class CalendarServiceImpl extends CalendarServiceGrpc.CalendarServiceImplBase {
 
     @Autowired
@@ -27,6 +27,7 @@ public class CalendarServiceImpl extends CalendarServiceGrpc.CalendarServiceImpl
         responseObserver.onNext(response);
         responseObserver.onCompleted();
     }
+
 
     @Override
     public void getEvent(CalendarServiceProto.GetEventRequest request, StreamObserver<CalendarServiceProto.GetEventResponse> responseObserver) {

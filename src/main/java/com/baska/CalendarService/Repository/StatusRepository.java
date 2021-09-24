@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface StatusRepository extends JpaRepository<Long, Status> {
+public interface StatusRepository extends JpaRepository<Status, Long> {
 
     @Query("select x.status from Status as x where x.id=:statusId")
     String getStatusById(Long statusId);

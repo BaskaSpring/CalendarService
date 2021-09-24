@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UsersRepository extends JpaRepository<Long, Users> {
+public interface UserRepository extends JpaRepository<Users, Long> {
 
     @Query("select x.name from Users as x where x.userId=:userId")
     String getUserNameByUserId(Long userId);

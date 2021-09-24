@@ -10,7 +10,7 @@ import java.time.Instant;
 import java.util.List;
 
 @Repository
-public interface EventsDataRepository extends JpaRepository<Long, EventsData> {
+public interface EventsDataRepository extends JpaRepository<EventsData, Long> {
 
     @Query("select x from EventsData as x where x.mTree like CONCAT('%.',:eventId)")
     List<EventsData> findByMtree(Long eventId);

@@ -7,13 +7,13 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface UserPermissionRepository  extends JpaRepository<Long, UserPermission> {
+public interface UserPermissionRepository extends JpaRepository<UserPermission, Long> {
 
     @Query("select x from UserPermission as x where x.eventId=:eventId and x.userId =:userId")
     UserPermission findByEventIdAndUserId(Long eventId, Long userId);
 
     @Query("select distinct x.eventId from UserPermission as x where x.userId=:userId and x.eventId in (:eventsId)")
-    List<Long> getByUserAndEvents(Long userId, List<Long> evetnsId);
+    List<Long> getByUserAndEvents(Long userId, List<Long> eventsId);
 
     @Query("select x from UserPermission as x where x.eventId =:eventId")
     List<UserPermission> getPermissionByEventId(Long eventId);

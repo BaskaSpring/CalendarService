@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface RoleRepository extends JpaRepository<Long, Role> {
+public interface RoleRepository extends JpaRepository<Role, Long > {
     @Query("select x.role from Role as x where x.id =:roleId")
     ERole getRoleByRoleId(Long roleId);
 }

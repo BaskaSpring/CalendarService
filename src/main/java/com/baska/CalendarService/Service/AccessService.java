@@ -3,7 +3,9 @@ package com.baska.CalendarService.Service;
 
 import com.baska.CalendarService.Payloads.*;
 import com.baska.CalendarService.Repository.*;
-import com.baska.CalendarService.models.*;
+import com.baska.CalendarService.models.EventsData;
+import com.baska.CalendarService.models.GroupPermission;
+import com.baska.CalendarService.models.UserPermission;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,7 +36,7 @@ public class AccessService {
     RoleRepository roleRepository;
 
     @Autowired
-    UsersRepository usersRepository;
+    UserRepository userRepository;
 
     @Autowired
     GroupRepository groupRepository;
@@ -44,7 +46,7 @@ public class AccessService {
             EventsData eventsData = eventsDataRepository.getEventById(eventId);
             List<UserPermission> userPermissionList = userPermissionRepository.getPermissionByEventId(eventId);
             List<GetEventUserList> eventUserLists = new ArrayList<>();
-            userPermissionList.forEach(x->eventUserLists.add(new GetEventUserList(x.getUserId(),roleRepository.getRoleByRoleId(x.getRoleId()).toString(),usersRepository.getUserNameByUserId(x.getUserId()))));
+            userPermissionList.forEach(x->eventUserLists.add(new GetEventUserList(x.getUserId(),roleRepository.getRoleByRoleId(x.getRoleId()).toString(),userRepository.getUserNameByUserId(x.getUserId()))));
             List<GroupPermission> groupPermissionList = groupPermissionRepository.getPermissionByEventId(eventId);
             List<GetEventGroupList> eventGroupLists = new ArrayList<>();
             groupPermissionList.forEach(x->eventGroupLists.add(new GetEventGroupList(x.getGroupId(),groupRepository.GetGroupNameByGroupId(x.getGroupId()))));
@@ -58,7 +60,7 @@ public class AccessService {
             getEventPayloadResponse.setDateBegin(InstantToString(eventsData.getDateBegin()));
             getEventPayloadResponse.setDateEnd(InstantToString(eventsData.getDateEnd()));
             getEventPayloadResponse.setParentCompletePercent(eventsData.getParentCompletePercent());
-            getEventPayloadResponse.setUserName(usersRepository.getUserNameByUserId(eventsData.getUserId()));
+            getEventPayloadResponse.setUserName(userRepository.getUserNameByUserId(eventsData.getUserId()));
             getEventPayloadResponse.setResource(eventsData.getResource());
             getEventPayloadResponse.setUserPermission(eventUserLists);
             getEventPayloadResponse.setGroupPermission(eventGroupLists);

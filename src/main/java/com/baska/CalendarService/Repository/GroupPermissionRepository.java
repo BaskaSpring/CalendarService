@@ -10,7 +10,7 @@ import java.util.Set;
 
 
 @Repository
-public interface GroupPermissionRepository extends JpaRepository<Long, GroupPermission> {
+public interface GroupPermissionRepository extends JpaRepository<GroupPermission,Long> {
 
     @Query("select x from GroupPermission as x where x.groupId =:groupId and x.eventsId=:eventId")
     GroupPermission GetEventsByGroupIdAndEventId(Long groupId,Long eventId);
