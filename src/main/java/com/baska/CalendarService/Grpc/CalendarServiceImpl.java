@@ -1,6 +1,7 @@
 package com.baska.CalendarService.Grpc;
 
 import com.baska.CalendarService.Service.AccessService;
+import com.baska.CalendarService.Service.CRUDService;
 import com.google.gson.Gson;
 import com.id.grpc.CalendarServiceGrpc;
 import com.id.grpc.CalendarServiceProto;
@@ -14,12 +15,12 @@ import org.springframework.stereotype.Component;
 public class CalendarServiceImpl extends CalendarServiceGrpc.CalendarServiceImplBase {
 
     @Autowired
-    AccessService accessService;
+    CRUDService CRUDService;
 
     @Override
     public void getEvents(CalendarServiceProto.GetEventsRequest request, StreamObserver<CalendarServiceProto.GetEventsResponse> responseObserver) {
         GetEventsPayloadRequest getEventsPayloadRequest = new Gson().fromJson(request.getJson(), GetEventsPayloadRequest.class);
-        String json  = accessService.getAll(getEventsPayloadRequest);
+        String json  = CRUDService.getAll(getEventsPayloadRequest);
         CalendarServiceProto.GetEventsResponse response = CalendarServiceProto.GetEventsResponse
                 .newBuilder()
                 .setJson(json)
@@ -32,8 +33,20 @@ public class CalendarServiceImpl extends CalendarServiceGrpc.CalendarServiceImpl
     @Override
     public void getEvent(CalendarServiceProto.GetEventRequest request, StreamObserver<CalendarServiceProto.GetEventResponse> responseObserver) {
         GetEventPayloadRequest getEventPayloadRequest = new Gson().fromJson(request.getJson(), GetEventPayloadRequest.class);
-        String json = accessService.getEvent(getEventPayloadRequest.getEventId(),getEventPayloadRequest.getUserId());
+        String json = CRUDService.getEvent(getEventPayloadRequest.getEventId(),getEventPayloadRequest.getUserId());
         CalendarServiceProto.GetEventResponse response = CalendarServiceProto.GetEventResponse
+                .newBuilder()
+                .setJson(json)
+                .build();
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void addEvent(CalendarServiceProto.AddEventRequest request, StreamObserver<CalendarServiceProto.AddEventResponse> responseObserver) {
+        AddEventPayloadRequest addEventPayloadRequest = new Gson().fromJson(request.getJson(), AddEventPayloadRequest.class);
+        String json = CRUDService.addEvent(addEventPayloadRequest);
+        CalendarServiceProto.AddEventResponse response = CalendarServiceProto.AddEventResponse
                 .newBuilder()
                 .setJson(json)
                 .build();

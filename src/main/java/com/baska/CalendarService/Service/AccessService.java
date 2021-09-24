@@ -3,15 +3,12 @@ package com.baska.CalendarService.Service;
 
 import com.baska.CalendarService.Payloads.*;
 import com.baska.CalendarService.Repository.*;
+import com.baska.CalendarService.models.ERole;
 import com.baska.CalendarService.models.EventsData;
 import com.baska.CalendarService.models.GroupPermission;
 import com.baska.CalendarService.models.UserPermission;
-import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.util.*;
 
 @Service
@@ -41,41 +38,24 @@ public class AccessService {
     @Autowired
     GroupRepository groupRepository;
 
-    public String getEvent(Long eventId,Long userId){
-        if (CheckAccess(eventId,userId)){
-            EventsData eventsData = eventsDataRepository.getEventById(eventId);
-            List<UserPermission> userPermissionList = userPermissionRepository.getPermissionByEventId(eventId);
-            List<GetEventUserList> eventUserLists = new ArrayList<>();
-            userPermissionList.forEach(x->eventUserLists.add(new GetEventUserList(x.getUserId(),roleRepository.getRoleByRoleId(x.getRoleId()).toString(),userRepository.getUserNameByUserId(x.getUserId()))));
-            List<GroupPermission> groupPermissionList = groupPermissionRepository.getPermissionByEventId(eventId);
-            List<GetEventGroupList> eventGroupLists = new ArrayList<>();
-            groupPermissionList.forEach(x->eventGroupLists.add(new GetEventGroupList(x.getGroupId(),groupRepository.GetGroupNameByGroupId(x.getGroupId()))));
-            GetEventPayloadResponse getEventPayloadResponse = new GetEventPayloadResponse();
-            getEventPayloadResponse.setCompletePercent(eventsData.getCompletePercent());
-            getEventPayloadResponse.setIdEvent(eventsData.getIdEvent());
-            getEventPayloadResponse.setStatusId(statusRepository.getStatusById(eventsData.getStatusId()));
-            getEventPayloadResponse.setText(eventsData.getText());
-            getEventPayloadResponse.setTitle(eventsData.getTitle());
-            getEventPayloadResponse.setTimestamp(InstantToString(eventsData.getTimeStamp()));
-            getEventPayloadResponse.setDateBegin(InstantToString(eventsData.getDateBegin()));
-            getEventPayloadResponse.setDateEnd(InstantToString(eventsData.getDateEnd()));
-            getEventPayloadResponse.setParentCompletePercent(eventsData.getParentCompletePercent());
-            getEventPayloadResponse.setUserName(userRepository.getUserNameByUserId(eventsData.getUserId()));
-            getEventPayloadResponse.setResource(eventsData.getResource());
-            getEventPayloadResponse.setUserPermission(eventUserLists);
-            getEventPayloadResponse.setGroupPermission(eventGroupLists);
-            new Gson().toJson(getEventPayloadResponse);
-        }
-        return "access denied";
+
+    public List<GetEventUserList> getEventUserLists(Long eventId){
+        //List<UserPermission> userPermissionList = userPermissionRepository.getPermissionByEventId(eventId);
+//        List<GetEventUserList> eventUserLists = userPermissionRepository.getUserList(eventId);
+//        userPermissionList.forEach(x->eventUserLists.add(new GetEventUserList(x.getUserId(),roleRepository.getRoleByRoleId(x.getRoleId()).toString(),userRepository.getUserNameByUserId(x.getUserId()))));
+        return userPermissionRepository.getUserList(eventId);
     }
 
-    private String InstantToString(Instant date){
-        Date MyDate = Date.from(date);
-        SimpleDateFormat formatter = new SimpleDateFormat("dd MM yyyy HH:mm:ss");
-        return formatter.format(MyDate);
+
+    public List<GetEventGroupList> getEventGroupLists(Long eventId) {
+        List<GroupPermission> groupPermissionList = groupPermissionRepository.getPermissionByEventId(eventId);
+        List<GetEventGroupList> eventGroupLists = new ArrayList<>();
+        groupPermissionList.forEach(x -> eventGroupLists.add(new GetEventGroupList(x.getGroupId(), groupRepository.GetGroupNameByGroupId(x.getGroupId()),roleRepository.getRoleByRoleId(x.getRoleId()).toString())));
+        return eventGroupLists;
     }
 
-    private Boolean CheckAccess(Long eventId ,Long userId){
+
+    public Boolean CheckAccess(Long eventId ,Long userId){
         UserPermission userPermission = userPermissionRepository.findByEventIdAndUserId(eventId,userId);
         if (userPermission.getId()!=null){
             return true;
@@ -95,14 +75,43 @@ public class AccessService {
         return false;
     }
 
-    public String getAll(GetEventsPayloadRequest getEventsPayloadRequest){
-        List<Long> eventsDataList = eventsDataRepository.findByDate(getEventsPayloadRequest.getDateBegin(),getEventsPayloadRequest.getDateEnd());
-        List<Long> userEventsId = userPermissionRepository.getByUserAndEvents(getEventsPayloadRequest.getUserId(),eventsDataList);
-        Long groupId = groupAndUserRepository.findGroupByUserId(getEventsPayloadRequest.getUserId());
-        List<Long> groupEventsId = groupPermissionRepository.getByGroupAndEvents(groupId,eventsDataList);
-        userEventsId.addAll(groupEventsId);
-        return new Gson().toJson(new GetEventsPayloadResponse(eventsDataRepository.getByEventsId(userEventsId)));
+    public void addUserPermissions(List<AddEventUserList> userList,Long eventId){
+        for (AddEventUserList el: userList){
+            UserPermission userPermission = new UserPermission();
+            userPermission.setEventId(eventId);
+            userPermission.setUserId(el.getId());
+            if (el.getRole().equals(ERole.WRITE.toString())){
+                userPermission.setRoleId(roleRepository.getIdByRole(ERole.WRITE));
+            } else {
+                userPermission.setRoleId(roleRepository.getIdByRole(ERole.READ));
+            }
+            userPermissionRepository.save(userPermission);
+        }
     }
+
+    public void addGroupPermissions(List<AddEventGroupList> groupList, Long eventId){
+        for (AddEventGroupList el: groupList){
+            Set<Long> longList = new HashSet<Long>();
+            longList.add(el.getId());
+
+        }
+//            GroupPermission groupPermission = new GroupPermission();
+//            groupPermission.setEventsId(eventId);
+//            groupPermission.setGroupId(el.getId());
+//            if (el.getRole().equals(ERole.WRITE.toString())){
+//                userPermission.setRoleId(roleRepository.getIdByRole(ERole.WRITE));
+//            } else {
+//                userPermission.setRoleId(roleRepository.getIdByRole(ERole.READ));
+//            }
+//            userPermissionRepository.save(userPermission);
+//        }
+    }
+
+    public void rek(Set<Long> longList,Long groupId){
+        groupRepository.GetParentIdByGroupId(groupId).
+    }
+
+
 
     public void CalculateAccess(){
 

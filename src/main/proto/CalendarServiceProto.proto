@@ -17,6 +17,14 @@ message GetEventResponse{
     string json = 1;
 }
 
+message AddEventRequest{
+    string json = 1;
+}
+
+message AddEventResponse{
+    string json = 1;
+}
+
 message UpdateEventRequest{
     string json = 1;
 }
@@ -33,12 +41,10 @@ message DeleteEventResponse{
     string json = 1;
 }
 
-
-
-
 service CalendarService{
     rpc GetEvents(GetEventsRequest) returns (GetEventsResponse);
     rpc GetEvent(GetEventRequest) returns (GetEventResponse);
+    rpc AddEvent(AddEventRequest) returns (AddEventResponse);
     rpc UpdateEvent(UpdateEventRequest) returns (UpdateEventResponse);
     rpc DeleteEvent(DeleteEventRequest) returns (DeleteEventResponse);
 

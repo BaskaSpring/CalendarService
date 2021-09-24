@@ -1,18 +1,15 @@
 package com.baska.CalendarService.Payloads;
 
-public class GetEventGroupList {
-
+public class AddEventUserList {
     Long id;
-    String name;
     String role;
 
-    public GetEventGroupList(Long id, String name, String role) {
+    public AddEventUserList(Long id, String role) {
         this.id = id;
-        this.name = name;
         this.role = role;
     }
 
-    public GetEventGroupList() {
+    public AddEventUserList() {
     }
 
     public Long getId() {
@@ -21,14 +18,6 @@ public class GetEventGroupList {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getRole() {
