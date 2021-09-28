@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface EventsDataRepository extends JpaRepository<EventsData, Long> {
@@ -23,5 +24,5 @@ public interface EventsDataRepository extends JpaRepository<EventsData, Long> {
     List<EventsData> getByEventsId(List<Long> eventsId);
 
     @Query("select x from EventsData as x where x.idEvent=:eventId")
-    EventsData getEventById(Long eventId);
+    Optional<EventsData> getEventById(Long eventId);
 }

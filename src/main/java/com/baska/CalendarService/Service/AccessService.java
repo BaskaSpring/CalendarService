@@ -64,7 +64,7 @@ public class AccessService {
         List<EventsData> eventsDataList = eventsDataRepository.findByMtree(eventId);
         Set<Long> groupIds = new HashSet<Long>();
         for (EventsData el:eventsDataList){
-            Arrays.stream(el.getmTree().split(".")).forEach(x->groupIds.add(Long.parseLong(x)));
+            Arrays.stream(el.getmTree().split("\\.")).forEach(x->groupIds.add(Long.parseLong(x)));
         }
         List<Long> groupListIds = groupPermissionRepository.findByEventsIds(groupIds);
         for (Long el: groupListIds){
@@ -75,40 +75,70 @@ public class AccessService {
         return false;
     }
 
-    public void addUserPermissions(List<AddEventUserList> userList,Long eventId){
+    public void addUserPermissions(List<AddEventUserList> userList,Long eventId,List<Long> eventsIds){
+        Long write = roleRepository.getIdByRole(ERole.WRITE);
+        Long read = roleRepository.getIdByRole(ERole.READ);
         for (AddEventUserList el: userList){
             UserPermission userPermission = new UserPermission();
             userPermission.setEventId(eventId);
             userPermission.setUserId(el.getId());
             if (el.getRole().equals(ERole.WRITE.toString())){
-                userPermission.setRoleId(roleRepository.getIdByRole(ERole.WRITE));
+                userPermission.setRoleId(write);
             } else {
-                userPermission.setRoleId(roleRepository.getIdByRole(ERole.READ));
+                userPermission.setRoleId(read);
             }
             userPermissionRepository.save(userPermission);
         }
+        if (eventsIds.size()>0) {
+            List<EventsData> eventsDataList = eventsDataRepository.getByEventsId(eventsIds);
+            for (EventsData el : eventsDataList) {
+                UserPermission userPermission = new UserPermission();
+                userPermission.setUserId(eventId);
+                userPermission.setRoleId(read);
+                userPermission.setUserId(el.getUserId());
+                userPermissionRepository.save(userPermission);
+            }
+        }
     }
 
-    public void addGroupPermissions(List<AddEventGroupList> groupList, Long eventId){
-        for (AddEventGroupList el: groupList){
-            Set<Long> longList = new HashSet<Long>();
-            longList.add(el.getId());
 
+
+    public void addGroupPermissions(List<AddEventGroupList> groupList, Long eventId, Set<Long> eventsIds){
+        Long write = roleRepository.getIdByRole(ERole.WRITE);
+        Long read = roleRepository.getIdByRole(ERole.READ);
+        for (AddEventGroupList el: groupList){
+            GroupPermission groupPermission = new GroupPermission();
+            groupPermission.setEventsId(eventId);
+            groupPermission.setGroupId(el.getId());
+            if (el.getRole().equals(ERole.WRITE.toString())){
+                groupPermission.setGroupId(write);
+            } else{
+                groupPermission.setGroupId(read);
+            }
+            groupPermissionRepository.save(groupPermission);
         }
-//            GroupPermission groupPermission = new GroupPermission();
-//            groupPermission.setEventsId(eventId);
-//            groupPermission.setGroupId(el.getId());
-//            if (el.getRole().equals(ERole.WRITE.toString())){
-//                userPermission.setRoleId(roleRepository.getIdByRole(ERole.WRITE));
-//            } else {
-//                userPermission.setRoleId(roleRepository.getIdByRole(ERole.READ));
-//            }
-//            userPermissionRepository.save(userPermission);
-//        }
+        if (eventsIds.size()>0){
+            Set<Long> groupIds = new HashSet<Long>();
+            List<Long> longList = groupPermissionRepository.findByEventsIds(eventsIds);
+            for (Long el: longList){
+                rek(groupIds, el);
+            }
+            for (Long el: groupIds){
+                GroupPermission groupPermission = new GroupPermission();
+                groupPermission.setEventsId(eventId);
+                groupPermission.setGroupId(el);
+                groupPermission.setGroupId(read);
+                groupPermissionRepository.save(groupPermission);
+            }
+        }
     }
 
     public void rek(Set<Long> longList,Long groupId){
-        groupRepository.GetParentIdByGroupId(groupId).
+        Long parent = groupRepository.GetParentIdByGroupId(groupId);
+        if (parent!=null){
+            longList.add(parent);
+            rek(longList,parent);
+        }
     }
 
 

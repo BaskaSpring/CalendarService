@@ -13,8 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class CRUDService {
@@ -45,6 +44,7 @@ public class CRUDService {
 
 
     public String addEvent(AddEventPayloadRequest addEventPayloadRequest){
+        Boolean existParent = false;
         Events events = new Events();
         eventsRepository.save(events);
         EventsData eventsData = new EventsData();
@@ -59,12 +59,22 @@ public class CRUDService {
         eventsData.setUserId(addEventPayloadRequest.getUserId());
         eventsData.setStatusId(statusRepository.getIdByStatus(EStatus.ACTIVE));
         if (addEventPayloadRequest.getParentId()>0){
-            EventsData parent = eventsDataRepository.getEventById(addEventPayloadRequest.getParentId());
+            EventsData parent = eventsDataRepository.getEventById(addEventPayloadRequest.getParentId()).orElse(new EventsData());
             eventsData.setmTree(parent.getmTree()+"."+addEventPayloadRequest.getParentId().toString());
+            existParent = true;
         }
         eventsDataRepository.save(eventsData);
-        accessService.addUserPermissions(addEventPayloadRequest.getEventUserList(),events.getId());
-        accessService.addGroupPermissions(addEventPayloadRequest.getEventGroupList(),events.getId());
+
+        List<Long> eventsIds = new ArrayList<Long>();
+        Set<Long> eventsIdList = new HashSet<Long>();
+        if (existParent){
+            EventsData eventsDataParent = eventsDataRepository.getEventById(events.getId()).orElse(new EventsData());
+            String mTree =eventsDataParent.getmTree();
+            Arrays.stream(mTree.split("\\.")).forEach(x->eventsIdList.add(Long.parseLong(x)));
+            eventsIds.addAll(eventsIdList);
+        }
+        accessService.addUserPermissions(addEventPayloadRequest.getEventUserList(),events.getId(),eventsIds);
+        accessService.addGroupPermissions(addEventPayloadRequest.getEventGroupList(),events.getId(),eventsIdList);
         return "ok";
     }
 
@@ -72,7 +82,7 @@ public class CRUDService {
 
     public String getEvent(Long eventId,Long userId){
         if (accessService.CheckAccess(eventId,userId)){
-            EventsData eventsData = eventsDataRepository.getEventById(eventId);
+            EventsData eventsData = eventsDataRepository.getEventById(eventId).orElse(new EventsData());
             List<GetEventUserList> eventUserLists = accessService.getEventUserLists(eventId);
             List<GetEventGroupList> eventGroupLists = accessService.getEventGroupLists(eventId);
             GetEventPayloadResponse getEventPayloadResponse = new GetEventPayloadResponse();
